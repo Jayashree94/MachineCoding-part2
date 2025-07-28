@@ -12,9 +12,30 @@
 }
 .search-input{
     width: 500px;
-    margin: 50px;
     padding: 5px;
     border: 1px solid black;
     
     
+}
+
+.recipe-container {
+    width: 500px;
+    height: 500px;
+    overflow-y : scroll;
+    margin: auto;
+    border: 1px solid black;
+    padding : 5px;
+}
+
+.recipe{
+    display: block;
+    text-align: left;
+    padding: 5px;
+
+    
+}
+
+.recipe:hover {
+    background-color: beige;
+    cursor: pointer;
 }

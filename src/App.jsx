@@ -4,24 +4,24 @@ import "./App.css";
 const App = () => {
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+ // const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
   const fetchData = async () => {
-    setLoading(true);
+    //setLoading(true);
     setError("");
     try {
-      const data = await fetch("https://dummyjson.com/recipes/search?q=");
+      const data = await fetch("https://dummyjson.com/recipes/search?q="+ searchInput);
       // if(!data.ok) throw new Error ("HTTP error -status : " + data.status)
       if (!data.ok) throw new Error(`HTTP error! status: ${data.status}`);
       const json = await data.json();
 
       console.log(json.recipes);
-      setRecipes(json.recipes);
+      setRecipes(json?.recipes);
     } catch (err) {
       setError(err.message);
     } finally {
-      setLoading(false);
+      //setLoading(false);
     }
   };
 
@@ -29,7 +29,7 @@ const App = () => {
     fetchData();
   }, [searchInput]);
 
-  if (loading) return <h2>Loading...</h2>;
+ // if (loading) return <h2>Loading...</h2>;
   if (error) return <h2 style={{ color: "red" }}>Error: {error}</h2>;
 
   return (
@@ -41,11 +41,11 @@ const App = () => {
         placeholder="please search recipes"
         value = {searchInput}
         onChange={(e) => setSearchInput(e.target.value)}
-      ></input>
-      <div className="">
+      />
+      <div className="recipe-container">
 
         {recipes.map((r) =>{
-          return <span key={r.id}>{r.name}</span>
+          return <span className = "recipe" key={r.id}>{r.name}</span>
         }) }
 
       </div>
