@@ -7,8 +7,16 @@ const App = () => {
   // const [loading, setLoading] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [showResults, setShowResults] = useState(false);
+  const [cache, setCache] = useState({});
 
   const fetchData = async () => {
+    if(cache[searchInput]){
+      setRecipes(cache[searchInput])
+      return;
+    }
+
+
+
     //setLoading(true);
     setError("");
     try {
@@ -21,6 +29,8 @@ const App = () => {
 
       console.log(json.recipes);
       setRecipes(json?.recipes);
+      setCache(prev => ({...prev , [searchInput] : json?.recipes
+      }))
     } catch (err) {
       setError(err.message);
     } finally {
