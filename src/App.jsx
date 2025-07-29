@@ -29,7 +29,11 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchData();
+    const timer = setTimeout(fetchData, 300);
+
+    return () =>{
+      clearInterval(timer);
+    }
   }, [searchInput]);
 
   // if (loading) return <h2>Loading...</h2>;
