@@ -10,10 +10,17 @@ export default function App() {
   }, []);
   const handleOnChange = (e, index) => {
     if (isNaN(e.target.value)) return;
+    const newVal = e.target.value.trim();
     const newArr = [...inputArr];
-    newArr[index] = e.target.value.slice(-1);
+    newArr[index] = newVal.slice(-1);
     setInputArr(newArr);
-    refArr.current[index + 1]?.focus();
+    newVal && refArr.current[index + 1]?.focus();
+  };
+
+  const handleKeyDown = (e, index) => {
+    if (!e.target.value && e.key === "Backspace") {
+      refArr.current[index - 1]?.focus();
+    }
   };
   return (
     <div className="App">
@@ -28,6 +35,7 @@ export default function App() {
             refArr.current[index] = input;
           }}
           onChange={(e) => handleOnChange(e, index)}
+          onKeyDown={(e) => handleKeyDown(e, index)}
         ></input>
       ))}
     </div>
