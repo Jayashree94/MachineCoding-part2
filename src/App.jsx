@@ -1,82 +1,49 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
+import React, { useState } from "react";
 
-const App = () => {
-  const [recipes, setRecipes] = useState([]);
-  const [error, setError] = useState("");
-  // const [loading, setLoading] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
-  const [showResults, setShowResults] = useState(false);
-  const [cache, setCache] = useState({});
+export default function TodoApp() {
+  const [task, setTask] = useState("");
+  const [todoList, setTodoList] = useState([]);
 
-  const fetchData = async () => {
-    if(cache[searchInput]){
-      setRecipes(cache[searchInput])
-      return;
-    }
+  const handleAddTask = () => {
+    if (task.trim() === "") return;
 
-
-
-    //setLoading(true);
-    setError("");
-    try {
-      const data = await fetch(
-        "https://dummyjson.com/recipes/search?q=" + searchInput
-      );
-      // if(!data.ok) throw new Error ("HTTP error -status : " + data.status)
-      if (!data.ok) throw new Error(`HTTP error! status: ${data.status}`);
-      const json = await data.json();
-
-      console.log(json.recipes);
-      setRecipes(json?.recipes);
-      setCache(prev => ({...prev , [searchInput] : json?.recipes
-      }))
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      //setLoading(false);
-    }
+    setTodoList([...todoList, task]);
+    setTask(""); // clear input
   };
 
-  useEffect(() => {
-    const timer = setTimeout(fetchData, 300);
-
-    return () =>{
-      clearInterval(timer);
-    }
-  }, [searchInput]);
-
-  // if (loading) return <h2>Loading...</h2>;
-  if (error) return <h2 style={{ color: "red" }}>Error: {error}</h2>;
+  const handleDelete = (indexToDelete) => {
+    const updatedList = todoList.filter((_, index) => index !== indexToDelete);
+    setTodoList(updatedList);
+  };
 
   return (
-    <div className="App">
-      <h3> Recipes with autocomplete search options </h3>
-      <div>
-        <input
-          type="text"
-          className="search-input"
-          placeholder="please search recipes"
-          value={searchInput}
-          onChange={(e) => setSearchInput(e.target.value)}
-          onFocus={() => setShowResults(true)}
-          onBlur={() => setShowResults(false)}
-        />
+    <div style={{ padding: "20px" }}>
+      <h2>📝 To-Do List</h2>
 
-        {showResults && (
-          <div className="recipe-container">
-            {recipes.map((r) => {
-              return (
-                <span className="recipe" key={r.id}>
-                  {r.name}
-                </span>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      <input
+        type="text"
+        placeholder="Enter a task"
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+      />
+
+      <button onClick={handleAddTask} style={{ marginLeft: "10px" }}>
+        Add Task
+      </button>
+
+      <ul>
+        {todoList.map((item, index) => (
+          <li key={index} style={{ marginTop: "10px" }}>
+            {item}
+            <button
+              onClick={() => handleDelete(index)}
+              style={{ marginLeft: "10px" }}
+            >
+              ❌
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
-};
-
-export default App;
+}
